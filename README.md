@@ -25,3 +25,37 @@ The `let length = contents.len();` line gets the length of the `contents` string
 The `let response = format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");` line formats the HTTP response. The `format!` macro returns a string formatted according to the format string and arguments. The format string includes placeholders `{}` for the `status_line`, `length`, and `contents` variables. The `\r\n` sequences are carriage return and line feed characters, which are used to separate lines in HTTP headers.
 
 Finally, the `stream.write_all(response.as_bytes()).unwrap();` line sends the HTTP response to the client. The `write_all` method writes all bytes from the `response` string to the stream, and the `as_bytes` method converts the `response` string into bytes. The `unwrap()` method is then called on the `Result` returned by `write_all`, which ensures that the write operation was successful, or panics if an error occurred.
+
+# Commit 3: Reflection notes
+![Commit 2 screen capture](/assets/commit3.png)
+## How to split between response? 
+In the code, I'm splitting the HTTP response into headers and body using the `split` method and the delimiter `\r\n\r\n`. This is a common way to separate the headers from the body in an HTTP message, as per the HTTP protocol.
+
+Here's how it works:
+
+```rust
+let response_parts: Vec<&str> = response.split("\r\n\r\n").collect();
+```
+
+The `split` method returns an iterator over the substrings of `response` that are separated by the delimiter `\r\n\r\n`. The `collect` method then transforms this iterator into a `Vec<&str>`, which is a vector of string slices.
+
+After this line, `response_parts` is a vector where the first element (`response_parts[0]`) is the headers and the second element (`response_parts[1]`) is the body.
+
+```rust
+let headers = response_parts[0];
+let body = response_parts[1];
+```
+
+These lines simply assign the headers and body to their respective variables.
+
+Finally, you write the headers and body to the stream:
+
+```rust
+stream.write_all(headers.as_bytes()).unwrap();
+stream.write_all(body.as_bytes()).unwrap();
+```
+
+The `write_all` method writes all bytes from the string slice to the stream, and the `as_bytes` method converts the string slice into bytes. The `unwrap` method is then called on the `Result` returned by `write_all`, which ensures that the write operation was successful, or panics if an error occurred.
+
+## Why Refactoring is needed? 
+Before refactoring (based on the tutorial book), there's significant redundancy in the if and else blocks: both are involved in file reading and writing operations. The sole distinctions lie in the status line and filename. To enhance code conciseness, we can extract these variances into separate lines within the if and else statements, assigning their values to variables. Subsequently, we can use these variables universally in the code to manage file reading and response writing.
