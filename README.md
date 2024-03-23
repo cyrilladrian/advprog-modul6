@@ -66,3 +66,6 @@ The `/sleep` url have:
         thread::sleep(Duration::from_secs(10)); ("HTTP/1.1 200 OK", "hello.html")
 ```
 inside the code, hence the response time of the html page is longer. The sleep functio from Rust's `std::thread` module pauses the execution of the current thread for a specified duration, in this case the duration is 10 seconds. This is used to simulate the network latency. 
+
+# Commit 5: Reflection
+In Rust, a thread pool is a collection of worker threads that are pre-allocated and managed for executing tasks concurrently. Thread pools are commonly used to efficiently handle asynchronous tasks, such as parallelizing CPU-bound work or performing I/O operations without blocking the main thread.
