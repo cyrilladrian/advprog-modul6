@@ -59,3 +59,10 @@ The `write_all` method writes all bytes from the string slice to the stream, and
 
 ## Why Refactoring is needed? 
 Before refactoring (based on the tutorial book), there's significant redundancy in the if and else blocks: both are involved in file reading and writing operations. The sole distinctions lie in the status line and filename. To enhance code conciseness, we can extract these variances into separate lines within the if and else statements, assigning their values to variables. Subsequently, we can use these variables universally in the code to manage file reading and response writing.
+
+# Commit 4: Reflection 
+The `/sleep` url have: 
+```rust
+        thread::sleep(Duration::from_secs(10)); ("HTTP/1.1 200 OK", "hello.html")
+```
+inside the code, hence the response time of the html page is longer. The sleep functio from Rust's `std::thread` module pauses the execution of the current thread for a specified duration, in this case the duration is 10 seconds. This is used to simulate the network latency. 
